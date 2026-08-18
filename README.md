@@ -1,5 +1,9 @@
 # AI Research RAG Bot
 
+A RAG bot to help me with the questions I have when reading research papers on AI. Made it simple because the main goal of this was functionality.
+
+=)
+
 # Setup/Installation
 
 Clone the repository
