@@ -21,6 +21,7 @@ RUN uv sync --frozen --no-dev
 COPY app ./app
 COPY migrations ./migrations
 COPY alembic.ini ./
+COPY templates ./templates
 COPY server-startup.sh ./
 
 RUN chmod +x server-startup.sh
