@@ -21,7 +21,10 @@ RUN uv sync --frozen --no-dev
 COPY app ./app
 COPY migrations ./migrations
 COPY alembic.ini ./
+COPY server-startup.sh ./
+
+RUN chmod +x server-startup.sh
 
 EXPOSE 8000
 
-CMD ["uv", "run", "--no-dev", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["/app/server-startup.sh"]
