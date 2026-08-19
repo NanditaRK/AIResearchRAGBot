@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "An AI Research Paper RAG Bot"
 readme = "README.md"
 requires-python = ">=3.11"
+
 dependencies = [
     "alembic>=1.19.1",
     "boto3>=1.43.73",
@@ -20,4 +21,15 @@ dependencies = [
     "sentence-transformers>=5.7.0",
     "sqlalchemy>=2.0.52",
     "uvicorn[standard]>=0.52.3",
+    "torch==2.8.0+cpu",
 ]
+
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
