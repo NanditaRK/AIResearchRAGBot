@@ -1,57 +1,44 @@
-from pathlib import Path
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from contextlib import asynccontextmanager
+from app.api.documents import router as documents_router
+from app.api.chat import router as chat_router
+from app.storage.object_storage import ObjectStorage
 
-from fastapi import FastAPI
-from pydantic import BaseModel
+storage = ObjectStorage()
 
-from .embeddings import EmbeddingModel
-from .vector_store import VectorStore
-from .rag import RAG
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+
+    storage.ensure_bucket()
+
+    yield
 
 
 app = FastAPI(
-    title="Customer Support RAG",
+    title="AI Research RAG",
+    lifespan=lifespan,
+)
+
+templates = Jinja2Templates(
+    directory="templates"
 )
 
 
-INDEX_DIR = "index"
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
 
-
-class Question(BaseModel):
-
-    question: str
-
-    top_k: int = 5
-
-
-embedding_model = EmbeddingModel()
-
-
-vector_store = VectorStore.load(
-    INDEX_DIR
-)
-
-
-rag = RAG(
-    vector_store=vector_store,
-    embedding_model=embedding_model,
-)
-
-
-@app.get("/health")
-def health():
-
-    return {
-        "status": "ok",
-        "documents": len(
-            vector_store.chunks
-        ),
-    }
-
-
-@app.post("/ask")
-def ask(request: Question):
-
-    return rag.answer(
-        question=request.question,
-        top_k=request.top_k,
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
     )
+
+app.include_router(
+    documents_router
+)
+
+app.include_router(
+    chat_router
+)
