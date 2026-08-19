@@ -3,14 +3,14 @@
 A RAG bot to help me with the questions I have when reading research papers on AI. Made it simple because the main goal of this was functionality.
 
 **Things to do in the future**
-   [] make the sources that are listed for user reference document name instead of ids
-   [] better research paper chunking
-   [] metadata filtering
-   [] hybrid BM25 and vector retrieval
-   [] reranking
-   [] citation aware generation
-   [] retrieval evaluation
-   [] async ingestion
+   * make the sources that are listed for user reference document name instead of ids
+   * better research paper chunking
+   * metadata filtering
+   * hybrid BM25 and vector retrieval
+   * reranking
+   * citation aware generation
+   * retrieval evaluation
+   * async ingestion
 
 # Setup/Installation
 
