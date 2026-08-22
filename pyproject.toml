@@ -9,7 +9,7 @@ dependencies = [
     "alembic>=1.19.1",
     "boto3>=1.43.73",
     "faiss-cpu>=1.15.0",
-    "fastapi>=0.141.1",
+    "fastapi[all]>=0.141.1",
     "google-genai>=2.18.1",
     "numpy>=2.4.6",
     "pgvector>=0.5.0",
@@ -21,12 +21,16 @@ dependencies = [
     "sentence-transformers>=5.7.0",
     "sqlalchemy>=2.0.52",
     "uvicorn[standard]>=0.52.3",
-    "torch==2.8.0+cpu",
+    "torch==2.8.0",
+    "passlib[bcrypt]>=1.7.4",
+    "pyjwt>=2.13.0",
+    "authlib>=1.7.2",
+    "bcrypt==4.0.1",
 ]
 
 
 [tool.uv.sources]
-torch = { index = "pytorch-cpu" }
+torch = { index = "pytorch-cpu", marker = "sys_platform == 'linux'" }
 
 
 [[tool.uv.index]]

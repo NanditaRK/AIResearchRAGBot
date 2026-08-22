@@ -8,6 +8,7 @@ from fastapi import (
 )
 from sqlalchemy.orm import Session
 
+from app.api.auth import get_current_active_user
 from app.db.database import get_db
 from app.db.models import Document
 from app.storage.object_storage import ObjectStorage
@@ -21,6 +22,7 @@ storage = ObjectStorage()
 @router.post("/documents")
 async def upload_document(
     file: UploadFile = File(...),
+    current_user = Depends(get_current_active_user),
     db: Session = Depends(get_db),
 ):
 
@@ -33,6 +35,7 @@ async def upload_document(
 
     document = Document(
         id=document_id,
+        user_id=current_user["user"].email,
         filename=file.filename,
         storage_key=storage_key,
         status="PROCESSING",
@@ -46,6 +49,8 @@ async def upload_document(
     document,
     db,
     )
+    
+    
 
     return {
         "id": str(document.id),

@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, Index
 
 from sqlalchemy import (
     DateTime,
@@ -26,6 +26,11 @@ class Document(Base):
     id: Mapped[uuid.UUID] = mapped_column(
         primary_key=True,
         default=uuid.uuid4,
+    )
+    
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.email"),
+        nullable=False,
     )
 
     filename: Mapped[str] = mapped_column(
@@ -101,4 +106,31 @@ class DocumentChunk(Base):
     embedding: Mapped[list[float]] = mapped_column(
         Vector(384),
         nullable=False,
+    )
+    
+
+    __table_args__ = (
+        Index(
+            "document_chunks_embedding_idx",
+            "embedding",
+            postgresql_using="hnsw",
+            postgresql_ops={"embedding": "vector_cosine_ops"},
+        ),
+    )
+
+class User(Base):
+    __tablename__ = "users"
+    
+    email: Mapped[str] = mapped_column(
+        primary_key=True,
+        nullable=False,
+    )
+    hashed_password: Mapped[str] = mapped_column(
+        nullable=False,
+    )
+    full_name: Mapped[str | None] = mapped_column(
+        nullable=True,
+    )
+    disabled: Mapped[bool | None] = mapped_column(
+        nullable=True,
     )
