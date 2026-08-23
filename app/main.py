@@ -3,6 +3,7 @@ import os
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from sqlalchemy.orm import Session
@@ -22,10 +23,20 @@ async def lifespan(app: FastAPI):
 
     yield
 
+origins = [
+    os.environ["FRONTEND_URL"],
+]
 
 app = FastAPI(
     title="AI Research RAG",
     lifespan=lifespan,
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.add_middleware(
