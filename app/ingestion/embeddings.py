@@ -1,8 +1,11 @@
 from sentence_transformers import SentenceTransformer
 
+from app import config
+
 
 model = SentenceTransformer(
-    "BAAI/bge-small-en-v1.5"
+    "BAAI/bge-small-en-v1.5",
+    token=config.HF_TOKEN,
 )
 
 

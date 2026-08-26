@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -8,6 +10,7 @@ from sqlalchemy.orm import Session
 from app import config
 from app.db.database import get_db
 from app.db.models import User
+from app.logging import configure_logging
 from app.schemas import UserCreate
 from app.storage.object_storage import ObjectStorage
 from starlette.middleware.sessions import SessionMiddleware
@@ -23,6 +26,8 @@ async def lifespan(app: FastAPI):
 origins = [
     config.FRONTEND_URL,
 ]
+
+configure_logging()
 
 app = FastAPI(
     title="AI Research RAG",
@@ -51,10 +56,11 @@ templates = Jinja2Templates(
     directory="templates"
 )
 
+logger = logging.getLogger(__name__)
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-
+    logger.info("Requested home page")
     return templates.TemplateResponse(
         request=request,
         name="index.html",

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-
+import logging
 from app.db.models import Document, DocumentChunk
 from app.ingestion.parser import parse_pdf
 from app.ingestion.chunker import chunk_pages
@@ -8,7 +8,7 @@ from app.storage.object_storage import ObjectStorage
 
 
 storage = ObjectStorage()
-
+logger = logging.getLogger(__name__)
 
 def ingest_document(
     document: Document,
@@ -63,9 +63,9 @@ def ingest_document(
         db.commit()
 
     except Exception:
-
+        
+        logger.error("Document pipeline failed. ")
         document.status = "FAILED"
-
         db.commit()
 
         raise
