@@ -1,5 +1,3 @@
-import os
-
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -7,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from sqlalchemy.orm import Session
+from app import config
 from app.db.database import get_db
 from app.db.models import User
 from app.schemas import UserCreate
@@ -24,7 +23,7 @@ async def lifespan(app: FastAPI):
     yield
 
 origins = [
-    os.environ["FRONTEND_URL"],
+    config.FRONTEND_URL,
 ]
 
 app = FastAPI(
@@ -42,7 +41,7 @@ app.add_middleware(
 app.add_middleware(
     SessionMiddleware, 
     # to generate secret_key run: openssl rand -hex 32
-    secret_key=os.environ["SESSION_SECRET_KEY"]
+    secret_key=config.SESSION_SECRET_KEY
 )  # Replace with a secure, random key!
 
 # 🔹 Registering Routers
