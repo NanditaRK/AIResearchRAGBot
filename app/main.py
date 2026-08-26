@@ -62,7 +62,7 @@ logger = logging.getLogger(__name__)
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    logger.info("Requested home page")
+    logger.info("Requested home page!")
     return templates.TemplateResponse(
         request=request,
         name="index.html",
