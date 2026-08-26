@@ -1,17 +1,13 @@
 import logging
 
-from fastapi import Depends, FastAPI, HTTPException, Request, status
+from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from sqlalchemy.orm import Session
 from app import config
-from app.db.database import get_db
-from app.db.models import User
 from app.logging import configure_logging
-from app.schemas import UserCreate
 from app.storage.object_storage import ObjectStorage
 from starlette.middleware.sessions import SessionMiddleware
 from app.api import auth, chat, documents
@@ -65,3 +61,7 @@ async def home(request: Request):
         request=request,
         name="index.html",
     )
+
+@app.get("/health/live", response_class=HTMLResponse)
+async def health():
+    return {"status": "ok"}
