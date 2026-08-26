@@ -11,19 +11,25 @@ from app.logging import configure_logging
 from app.storage.object_storage import ObjectStorage
 from starlette.middleware.sessions import SessionMiddleware
 from app.api import auth, chat, documents
-storage = ObjectStorage()
 
+storage = ObjectStorage()
+configure_logging()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    logger.info("Application startup")
+    logger.info("Ensuring MinIO bucket")
     storage.ensure_bucket()
+    logger.info("MinIO bucket ready")
     yield
+    logger.info("Application shutdown")
+
 
 origins = [
     config.FRONTEND_URL,
 ]
 
-configure_logging()
+
 
 app = FastAPI(
     title="AI Research RAG",
@@ -62,6 +68,6 @@ async def home(request: Request):
         name="index.html",
     )
 
-@app.get("/health/live", response_class=HTMLResponse)
+@app.get("/health/live")
 async def health():
     return {"status": "ok"}
