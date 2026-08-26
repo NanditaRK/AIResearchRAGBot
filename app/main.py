@@ -62,21 +62,3 @@ async def home(request: Request):
         request=request,
         name="index.html",
     )
-
-
-@app.post('/register')
-async def register(register_data: UserCreate, db: Session = Depends(get_db)):
-    user = db.get(User, {"email": register_data.email})
-    if user:
-        raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Account already exists",
-                )
-    new_user = auth.create_user(email=register_data.email, password=register_data.password, full_name=register_data.full_name, db=db)
-    
-
-    return {
-        "message": "Account created successfully!",
-    }
-    
-    

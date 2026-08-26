@@ -13,7 +13,9 @@ from app.db.models import User
 from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
 
-from app.services.auth import authenticate_user, create_access_token, get_current_active_user
+from app.repositories import auth
+from app.schemas import UserCreate
+from app.services.auth import authenticate_user, create_access_token, get_current_active_user, get_password_hash
 
 router = APIRouter()
 
@@ -23,6 +25,22 @@ async def read_users_me(
 ):
     return current_user
 
+@router.post('/register')
+async def register(register_data: UserCreate, db: Session = Depends(get_db)):
+    user = db.get(User, {"email": register_data.email})
+    if user:
+        raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Account already exists",
+                )
+    hashed_password = get_password_hash(register_data.password)
+    new_user = auth.create_user(email=register_data.email, hashed_password=hashed_password, full_name=register_data.full_name, db=db)
+    
+
+    return {
+        "message": "Account created successfully!",
+    }
+    
 
 # endpoint for user authentication and token generation
 # validates username/password and returns JWT access token if valid

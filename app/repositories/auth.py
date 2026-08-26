@@ -2,10 +2,8 @@ from sqlalchemy.orm import Session
 
 from app.db.models import User
 from app.schemas import UsrInDB
-from app.services.auth import get_password_hash
 
-def create_user(email: str, password: str, full_name: str, db: Session):
-    hashed_password = get_password_hash(password)
+def create_user(email: str, hashed_password: str, full_name: str, db: Session):
     new_user = User(email=email,
     hashed_password=hashed_password,
     full_name=full_name,
