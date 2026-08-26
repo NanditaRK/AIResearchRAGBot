@@ -6,7 +6,7 @@ from fastapi import (
     status
 )
 from sqlalchemy.orm import Session
-
+import logging
 from app import config
 from app.db.database import get_db
 from app.db.models import User
@@ -18,17 +18,20 @@ from app.schemas import UserCreate
 from app.services.auth import authenticate_user, create_access_token, get_current_active_user, get_password_hash
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 @router.get("/users/me")
 async def read_users_me(
     current_user: Annotated[User, Depends(get_current_active_user)],
 ):
+    logger.info("Requested /users/me")
     return current_user
 
 @router.post('/register')
 async def register(register_data: UserCreate, db: Session = Depends(get_db)):
     user = db.get(User, {"email": register_data.email})
     if user:
+        logger.error("Client made bad request during /register")
         raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail="Account already exists",
@@ -48,6 +51,7 @@ async def register(register_data: UserCreate, db: Session = Depends(get_db)):
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)):
     user = authenticate_user( form_data.username, form_data.password, db)
     if not user:
+        logger.error("Client gave incorrect credentials during login")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
