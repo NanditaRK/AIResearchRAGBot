@@ -6,13 +6,11 @@ model = SentenceTransformer(
 )
 
 
-def embed_texts(
-    texts: list[str],
-) -> list[list[float]]:
+def embed_texts(texts: list[str]) -> list[list[float]]:
 
     embeddings = model.encode(
         texts,
         normalize_embeddings=True,
     )
-
+    
     return embeddings.tolist()

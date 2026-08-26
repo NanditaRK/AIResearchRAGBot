@@ -17,9 +17,7 @@ storage = ObjectStorage()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-
     storage.ensure_bucket()
-
     yield
 
 origins = [
@@ -40,11 +38,10 @@ app.add_middleware(
 
 app.add_middleware(
     SessionMiddleware, 
-    # to generate secret_key run: openssl rand -hex 32
     secret_key=config.SESSION_SECRET_KEY
-)  # Replace with a secure, random key!
+)
 
-# 🔹 Registering Routers
+
 app.include_router(auth.router)
 app.include_router(chat.router)
 app.include_router(documents.router)

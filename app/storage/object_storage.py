@@ -4,30 +4,15 @@ from uuid import UUID
 import boto3
 from botocore.client import Config
 from fastapi import UploadFile
-
+from app import config
 
 class ObjectStorage:
 
     def __init__(self):
-        self.endpoint_url = os.getenv(
-            "S3_ENDPOINT_URL",
-            "http://localhost:9000",
-        )
-
-        self.access_key = os.getenv(
-            "S3_ACCESS_KEY",
-            "minioadmin",
-        )
-
-        self.secret_key = os.getenv(
-            "S3_SECRET_KEY",
-            "minioadmin",
-        )
-
-        self.bucket = os.getenv(
-            "S3_BUCKET",
-            "research-papers",
-        )
+        self.endpoint_url = config.S3_ENDPOINT_URL
+        self.access_key = config.S3_ACCESS_KEY
+        self.secret_key = config.S3_SECRET_KEY
+        self.bucket = config.S3_BUCKET
 
         self.client = boto3.client(
             "s3",
