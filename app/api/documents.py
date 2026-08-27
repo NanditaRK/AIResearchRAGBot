@@ -6,6 +6,7 @@ from fastapi import (
     File,
     UploadFile,
 )
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.api.auth import get_current_active_user
@@ -58,3 +59,14 @@ async def upload_document(
         "status": document.status,
         "storage_key": document.storage_key,
     }
+    
+@router.get('/documents')
+async def get_documents(
+    current_user = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):  
+    user_id = current_user["user"].email
+    documents = db.scalars(select(Document).filter_by(user_id=user_id)).all()
+    
+    return documents
+    
