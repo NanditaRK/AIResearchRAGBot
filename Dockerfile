@@ -30,6 +30,6 @@ EXPOSE 8000
 
 CMD ["/app/server-startup.sh"]
 
-HEALTHCHECK --interval=10s --start-period=3m --timeout=3s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live')" || exit 1
+# HEALTHCHECK --interval=60s --start-period=3m --timeout=3s --retries=3 \
+#     CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live')" || exit 1
 
