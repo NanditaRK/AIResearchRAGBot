@@ -5,7 +5,7 @@ answer questions I have. It's pretty simple right now because the project
 was made for functionality. Will be adding features as I need it.
 
 **Things to do in the future**
-   * make the sources that are listed for user reference document name instead of ids
+  * ~~make the sources that are listed for user reference document name instead of ids~~
    * better research paper chunking
    * metadata filtering
    * hybrid BM25 and vector retrieval
